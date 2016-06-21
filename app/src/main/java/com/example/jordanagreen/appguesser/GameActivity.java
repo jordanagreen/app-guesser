@@ -1,6 +1,7 @@
 package com.example.jordanagreen.appguesser;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,17 +34,15 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<App> getInstalledApps(){
         ArrayList<App> apps = new ArrayList<>();
         PackageManager pm = getPackageManager();
-        for (ApplicationInfo info: pm.getInstalledApplications(PackageManager.GET_META_DATA)){
-            String name = pm.getApplicationLabel(info).toString();
-            long dateInstalled = getDateInstalled(info);
+        for (PackageInfo packageInfo: pm.getInstalledPackages(PackageManager.GET_META_DATA)){
+            ApplicationInfo appInfo = packageInfo.applicationInfo;
+            if (appInfo == null) continue;
+            String name = pm.getApplicationLabel(appInfo).toString();
+            long dateInstalled = packageInfo.firstInstallTime;
             Log.d(TAG, name + " " + dateInstalled);
             apps.add(new App(name, dateInstalled));
         }
         return apps;
-    }
-
-    private long getDateInstalled(ApplicationInfo info){
-        return 0;
     }
 
 }

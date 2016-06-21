@@ -28,8 +28,10 @@ public class AppAdapter extends ArrayAdapter<App> {
         }
         // Lookup view for data population
         TextView appName = (TextView) convertView.findViewById(R.id.appName);
+//        TextView appInstallTime = (TextView) convertView.findViewById(R.id.appInstallTime);
         // Populate the data into the template view using the data object
         appName.setText(app.getName());
+//        appInstallTime.setText(String.format(Locale.US, "%d", app.getDateInstalled()));
         // Return the completed view to render on screen
         return convertView;
     }
