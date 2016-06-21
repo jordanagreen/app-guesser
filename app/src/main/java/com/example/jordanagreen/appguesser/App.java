@@ -28,4 +28,8 @@ public class App {
     Drawable getIcon(){
         return icon;
     }
+
+    public String toString(){
+        return name;
+    }
 }

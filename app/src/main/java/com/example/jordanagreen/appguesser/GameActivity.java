@@ -7,13 +7,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements OnItemClickListener {
 
     public static final String TAG = "GameActivity";
     private static final int APPS_TO_SHOW = 5;
@@ -22,6 +25,7 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<App> allApps;
     private ArrayList<App> currentApps;
     private ListView appList;
+    private int earliestIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +33,13 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         allApps = getInstalledApps();
+        currentApps = new ArrayList<>();
         Log.d(TAG, "Got installed apps");
-        currentApps = getRandomApps(allApps, APPS_TO_SHOW);
         adapter = new AppAdapter(this, currentApps);
         appList = (ListView) findViewById(R.id.appList);
         appList.setAdapter(adapter);
+        appList.setOnItemClickListener(this);
+        refreshAppList();
     }
 
     private ArrayList<App> getInstalledApps(){
@@ -58,4 +64,23 @@ public class GameActivity extends AppCompatActivity {
         return new ArrayList<>(copy.subList(0, count));
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.d(TAG, "Item " + i + ": " + appList.getAdapter().getItem(i) + " clicked");
+        refreshAppList();
+    }
+
+    private void refreshAppList(){
+        Log.d(TAG, "Refreshing app list");
+        currentApps.clear();
+        currentApps.addAll(getRandomApps(allApps, APPS_TO_SHOW));
+        long earliest = Long.MAX_VALUE;
+        for (int i = 0; i < currentApps.size(); i++){
+            if (currentApps.get(i).getDateInstalled() < earliest){
+                earliestIndex = i;
+            }
+        }
+        adapter.notifyDataSetChanged();
+        Log.d(TAG, "Earliest app is " + earliestIndex + ": " + currentApps.get(earliestIndex));
+    }
 }
