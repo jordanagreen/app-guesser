@@ -10,13 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GameActivity extends AppCompatActivity {
 
     public static final String TAG = "GameActivity";
+    private static final int APPS_TO_SHOW = 5;
 
     private ArrayAdapter<App> adapter;
     private ArrayList<App> allApps;
+    private ArrayList<App> currentApps;
     private ListView appList;
 
     @Override
@@ -26,7 +29,8 @@ public class GameActivity extends AppCompatActivity {
 
         allApps = getInstalledApps();
         Log.d(TAG, "Got installed apps");
-        adapter = new AppAdapter(this, allApps);
+        currentApps = getRandomApps(allApps, APPS_TO_SHOW);
+        adapter = new AppAdapter(this, currentApps);
         appList = (ListView) findViewById(R.id.appList);
         appList.setAdapter(adapter);
     }
@@ -43,6 +47,13 @@ public class GameActivity extends AppCompatActivity {
             apps.add(new App(name, dateInstalled));
         }
         return apps;
+    }
+
+    private ArrayList<App> getRandomApps(ArrayList<App> apps, int count){
+        ArrayList<App> copy = new ArrayList<>(apps);
+        Collections.shuffle(copy);
+        if (count >= copy.size()) return copy;
+        return new ArrayList<>(copy.subList(0, count));
     }
 
 }
