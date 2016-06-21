@@ -3,6 +3,7 @@ package com.example.jordanagreen.appguesser;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -43,8 +44,9 @@ public class GameActivity extends AppCompatActivity {
             if (appInfo == null) continue;
             String name = pm.getApplicationLabel(appInfo).toString();
             long dateInstalled = packageInfo.firstInstallTime;
+            Drawable icon = pm.getApplicationIcon(appInfo);
             Log.d(TAG, name + " " + dateInstalled);
-            apps.add(new App(name, dateInstalled));
+            apps.add(new App(name, dateInstalled, icon));
         }
         return apps;
     }
