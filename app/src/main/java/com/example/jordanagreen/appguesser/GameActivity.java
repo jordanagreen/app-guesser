@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ public class GameActivity extends AppCompatActivity implements OnItemClickListen
     private ArrayList<App> currentApps;
     private ListView appList;
     private int earliestIndex;
+    private int currentStreak;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,15 @@ public class GameActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Log.d(TAG, "Item " + i + ": " + appList.getAdapter().getItem(i) + " clicked");
+        if (i == earliestIndex){
+            currentStreak++;
+            Toast.makeText(GameActivity.this, "Correct: Score = " + currentStreak,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(GameActivity.this, "Wrong: Correct answer was " +
+                    currentApps.get(earliestIndex), Toast.LENGTH_SHORT).show();
+            currentStreak = 0;
+        }
         refreshAppList();
     }
 
