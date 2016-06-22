@@ -49,7 +49,10 @@ public class GameActivity extends AppCompatActivity implements OnItemClickListen
         PackageManager pm = getPackageManager();
         for (PackageInfo packageInfo: pm.getInstalledPackages(PackageManager.GET_META_DATA)){
             ApplicationInfo appInfo = packageInfo.applicationInfo;
-            if (appInfo == null) continue;
+            //skip system apps
+            if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                continue;
+            }
             String name = pm.getApplicationLabel(appInfo).toString();
             long dateInstalled = packageInfo.firstInstallTime;
             Drawable icon = pm.getApplicationIcon(appInfo);
@@ -89,6 +92,7 @@ public class GameActivity extends AppCompatActivity implements OnItemClickListen
         for (int i = 0; i < currentApps.size(); i++){
             if (currentApps.get(i).getDateInstalled() < earliest){
                 earliestIndex = i;
+                earliest = currentApps.get(i).getDateInstalled();
             }
         }
         adapter.notifyDataSetChanged();
